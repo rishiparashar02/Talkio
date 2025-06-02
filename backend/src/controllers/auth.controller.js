@@ -1,3 +1,7 @@
+import { generateToken } from "../lib/utlis.js";
+import User from "../models/user.models.js";
+import bcrypt from "bcryptjs";
+
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
@@ -44,6 +48,7 @@ export const signup = async (req, res) => {
  
 export const login =  (req, res)=> {
     res.send("login route"); 
+    
 };
 
 export const logout =  (req, res)=> {
