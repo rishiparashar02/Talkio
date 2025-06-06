@@ -32,7 +32,7 @@ export const getMessages = async (req, res) => {
 };
 
 
-const sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
     try {
         const { text, image } = req.body;
         const { id: receiverId } = req.params;
@@ -45,13 +45,24 @@ const sendMessage = async (req, res) => {
             imageUrl = uploadResponse.secure_url;
         }
 
+        //recive message
+        const newMessage = new Message({
+            senderId,
+            receiverId,
+            text,
+            image: imageUrl,
+        });
+
+        await newMessage.save();
+
         const receiverSocketId = getReceiverSocketId(receiverId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("newMessage", newMessage);
         }
-
+        console.log("Message sent successfully");
         res.status(201).json(newMessage);
     } catch (error) {
-        console.log("Error in sending messeages: ", error.message);
+        console.log("Error in sendMessage controller: ", error.message);
+        res.status(500).json({ error: "Internal server error" });
     }
 };
