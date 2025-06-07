@@ -1,12 +1,30 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { axiosInstance } from "../lib/axios.js";
+import toast from "react-hot-toast";
+import { io } from "socket.io-client";
 
-const useAuthStore = create((set) => ({
-    user: null,
-    token: null,
-    isAuthenticated: false,
-    setUser: (user) => set({ user, isAuthenticated: !!user }),
-    setToken: (token) => set({ token }),
-    logout: () => set({ user: null, token: null, isAuthenticated: false }),
-}));
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 
-export default useAuthStore;
+export const useAuthStore = create((set, get) => ({
+  authUser: null,
+  isSigningUp: false,
+  isLoggingIn: false,
+  isUpdatingProfile: false,
+  isCheckingAuth: true,
+  onlineUsers: [],
+  socket: null,
+
+  checkAuth: async () => {
+    try {
+      const res = await axiosInstance.get("/auth/check");
+
+      set({ authUser: res.data });
+      get().connectSocket();
+    } catch (error) {
+      console.log("Error in checkAuth:", error);
+      set({ authUser: null });
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
+}))
