@@ -1,4 +1,4 @@
-import { generateToken } from "../lib/utlis.js";
+import { generateToken } from "../lib/utils.js";
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
@@ -27,10 +27,6 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    console.log("Sender ID:", req.user._id);
-    console.log("Receiver ID:", req.params.id);
-
-
     if (newUser) {
       // generate jwt token here
       generateToken(newUser._id, res);
@@ -50,38 +46,36 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
- 
-export const login = async (req, res)=> {
-    const { email, password } = req.body;
-    try {
-      const user = await User.findOne({email})
 
-        if (!user) {
-            return res.status(400).json({ message: "Invalid Credentials" }); //in postman
-        }
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password)
-        if (!isPasswordCorrect) {
-            return res.status(400).json({ message: "Invalid Credentials" });  //in postman
-        }
-
-        generateToken(user._id, res);
-
-        res.status(200).json({
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            profilePic: user.profilePic,
-        });
-
-    } catch (error) {
-      console.log("Error in login controller", error.message);
-      res.status(500).json({ message: "Internal Server Error" });
-      
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    generateToken(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.log("Error in login controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
-export const logout = (req, res)=> {
+export const logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
