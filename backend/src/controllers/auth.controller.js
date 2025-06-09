@@ -27,6 +27,10 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
+    console.log("Sender ID:", req.user._id);
+    console.log("Receiver ID:", req.params.id);
+
+
     if (newUser) {
       // generate jwt token here
       generateToken(newUser._id, res);
