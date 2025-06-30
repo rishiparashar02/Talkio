@@ -5,33 +5,41 @@ import express from "express";
 const app = express();
 const server = http.createServer(app);
 
+// ✅ Updated CORS for Socket.io
 const io = new Server(server, {
-    cors: {
-        origin: ["http://localhost:5173"],
-    },
+  cors: {
+    origin: [
+      "http://localhost:5173", // for local development
+      "https://talkio-theta.vercel.app" // deployed Vercel frontend
+    ],
+    credentials: true, // ✅ allow cookies / sessions
+  },
 });
 
+// Store online users
+const userSocketMap = {}; // { userId: socketId }
+
+// Helper to get socket ID of a specific user
 export function getReceiverSocketId(userId) {
-    return userSocketMap[userId];
+  return userSocketMap[userId];
 }
 
-// used to store online users
-const userSocketMap = {}; // {userId: socketId}
-
+// Handle socket connections
 io.on("connection", (socket) => {
-    console.log("A user connected", socket.id);
+  console.log("🔌 User connected:", socket.id);
 
-    const userId = socket.handshake.query.userId;
-    if (userId) userSocketMap[userId] = socket.id;
+  const userId = socket.handshake.query.userId;
+  if (userId) userSocketMap[userId] = socket.id;
 
-    // io.emit() is used to send events to all the connected clients
+  // Notify all clients about online users
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("❌ User disconnected:", socket.id);
+    delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-    socket.on("disconnect", () => {
-        console.log("A user disconnected", socket.id);
-        delete userSocketMap[userId];
-        io.emit("getOnlineUsers", Object.keys(userSocketMap));
-    });
+  });
 });
 
 export { io, app, server };
