@@ -22,7 +22,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // for local dev
-      "http://localhost:3001", // for Docker frontend
+      "http://localhost:3001",
+      "https://talkio-theta.vercel.app" // for Docker frontend
     ],
     credentials: true,
   })
