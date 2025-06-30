@@ -23,7 +23,7 @@ app.use(
     origin: [
       "http://localhost:5173", // for local dev
       "http://localhost:3001",
-      "https://talkio-theta.vercel.app" // for Docker frontend
+      "https://talkio-backend.onrender.com" // for Docker frontend
     ],
     credentials: true,
   })
