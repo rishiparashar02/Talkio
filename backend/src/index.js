@@ -18,12 +18,14 @@ const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://talkio-theta.vercel.app",
+  "https://talkio-kr3n70w34-rishi-parashars-projects.vercel.app" // ✅ new frontend
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    const allowedOrigins = [
-      "http://localhost:5173",
-      "https://talkio-theta.vercel.app"
-    ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -32,6 +34,7 @@ app.use(cors({
   },
   credentials: true,
 }));
+
 
 
 app.use("/api/auth", authRoutes);
