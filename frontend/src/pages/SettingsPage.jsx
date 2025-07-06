@@ -10,9 +10,6 @@ const SettingsPage = () => {
   const [fontSize, setFontSize] = useState("text-sm");
   const [bubbleStyle, setBubbleStyle] = useState("rounded-xl");
 
-  // Set the theme to dark mode by default
-  document.documentElement.setAttribute("data-theme", "dark");
-
   return (
     <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
       <div className="space-y-6">
@@ -85,7 +82,7 @@ const SettingsPage = () => {
                           ${fontSize}
                         `}
                       >
-                        <p>This is a preview message.</p>
+                        <p>{message.content}</p>
                         <p className={`text-[10px] mt-1.5 ${message.isSent ? "text-primary-content/70" : "text-base-content/70"}`}>
                           12:24 PM
                         </p>
