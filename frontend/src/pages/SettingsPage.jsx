@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send, Moon, Sun } from "lucide-react";
+import { Send } from "lucide-react";
 
 const PREVIEW_MESSAGES = [
   { id: 1, content: "Hey! How's it going?", isSent: false },
@@ -7,14 +7,11 @@ const PREVIEW_MESSAGES = [
 ];
 
 const SettingsPage = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [fontSize, setFontSize] = useState("text-sm");
   const [bubbleStyle, setBubbleStyle] = useState("rounded-xl");
 
-  const toggleTheme = () => {
-    document.documentElement.setAttribute("data-theme", isDarkMode ? "light" : "dark");
-    setIsDarkMode(!isDarkMode);
-  };
+  // Set the theme to dark mode by default
+  document.documentElement.setAttribute("data-theme", "dark");
 
   return (
     <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
@@ -24,15 +21,6 @@ const SettingsPage = () => {
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">Appearance</h2>
           <p className="text-sm text-base-content/70">Customize the look and feel of your chat</p>
-        </div>
-
-        {/* Theme Toggle */}
-        <div className="flex items-center justify-between p-4 rounded-lg border border-base-300 bg-base-100">
-          <span className="text-sm font-medium">Dark Mode</span>
-          <button onClick={toggleTheme} className="btn btn-sm">
-            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-            {isDarkMode ? "Light" : "Dark"}
-          </button>
         </div>
 
         {/* Font Size Selector */}
