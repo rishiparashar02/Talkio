@@ -175,11 +175,11 @@ const LoginPage = () => {
         </div>
 
         {/* Illustration */}
-        <img
-          src=""
+        {/* <img
+          src= "../assets/Image/Chat Illustrator.png"
           alt="Chat Illustration"
           className="w-32 opacity-80"
-        />
+        /> */}
       </div>
 
 
